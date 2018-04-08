@@ -6,7 +6,9 @@ RUN apt-get update \
      dovecot-common \
      dovecot-imapd \
      dovecot-ldap \
-     dovecot-pgsql -y
+     dovecot-pgsql \
+     dovecot-solr \
+     dovecot-fts -y
 
 EXPOSE 143
 
