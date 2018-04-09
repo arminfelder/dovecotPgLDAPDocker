@@ -8,7 +8,10 @@ RUN apt-get update \
      dovecot-ldap \
      dovecot-pgsql \
      dovecot-solr \
-     dovecot-fts -y
+     dovecot-fts \
+     dovecot-lmtpd -y \
+     && systemctl enable dovecot \
+     && service dovecot start
 
 EXPOSE 143
 
