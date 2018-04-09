@@ -17,4 +17,4 @@ EXPOSE 143
 
 VOLUME ["/etc/dovecot","/var/mail"]
 
-RUN ["/usr/sbin/dovecot"]
+RUN ["/bin/bash"]
