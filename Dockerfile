@@ -3,7 +3,7 @@ FROM debian:stable-slim
 RUN apt-get update \
     && apt-get install \
     postfix \
-    postfix-pgsql -y \
+    postfix-pgsql -y --force-yes \
     && apt-get autoremove -y \
     && apt-get clean
 
