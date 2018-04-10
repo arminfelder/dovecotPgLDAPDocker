@@ -25,6 +25,7 @@ EXPOSE 110
 EXPOSE 993
 EXPOSE 995
 EXPOSE 24
+EXPOSE 26
 
 VOLUME ["/etc/dovecot","/var/mail"]
 
