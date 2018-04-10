@@ -25,6 +25,6 @@ EXPOSE 993
 EXPOSE 995
 EXPOSE 24
 
-VOLUME ["/etc/dovecot","/var/mail","/etc/postfix"]
+VOLUME ["/etc/dovecot","/var/mail"]
 
 CMD ["/usr/sbin/dovecot", "-F"]
