@@ -5,6 +5,7 @@ RUN apt-get update \
      dovecot-core \
      dovecot-common \
      dovecot-imapd \
+     dovecot-pop3d \
      dovecot-ldap \
      dovecot-pgsql \
      dovecot-solr \
