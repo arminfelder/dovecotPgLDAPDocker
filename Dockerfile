@@ -20,6 +20,10 @@ RUN useradd -r -u 150 -g mail -d /var/vmail -s /sbin/nologin -c "Virtual Mail Us
     && chmod -R o-rwx /etc/dovecot
 
 EXPOSE 143
+EXPOSE 110
+EXPOSE 993
+EXPOSE 995
+EXPOSE 24
 
 VOLUME ["/etc/dovecot","/var/mail","/etc/postfix"]
 
