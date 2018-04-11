@@ -9,6 +9,7 @@ RUN apt-get update \
      dovecot-ldap \
      dovecot-pgsql \
      dovecot-solr \
+     dovecot-antispam \
      dovecot-lmtpd -y \
      && apt-get autoremove -y \
      && apt-get clean
