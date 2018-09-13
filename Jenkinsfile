@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label "jenkins-python"
+    }
     environment {
       ORG               = 'armin-felder-gmail-com'
       APP_NAME          = 'dovecot-with-LDAP-PG-plugins'
@@ -16,14 +18,16 @@ pipeline {
           HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()
         }
         steps {
+          container('python') {
             sh 'export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml'
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
-
+          }
 
           dir ('./charts/preview') {
+           container('python') {
              sh "make preview"
              sh "jx preview --app $APP_NAME --dir ../.."
-
+           }
           }
         }
       }
@@ -32,21 +36,26 @@ pipeline {
           branch 'master'
         }
         steps {
-          // ensure we're not on a detached head
-          sh "git checkout master"
-          sh "git config --global credential.helper store"
+          container('python') {
+            // ensure we're not on a detached head
+            sh "git checkout master"
+            sh "git config --global credential.helper store"
 
-          sh "jx step git credentials"
-          // so we can retrieve the version in later steps
-          sh "echo \$(jx-release-version) > VERSION"
-
-          dir ('./charts/dovecot-ldap-pg') {
-              sh "make tag"
+            sh "jx step git credentials"
+            // so we can retrieve the version in later steps
+            sh "echo \$(jx-release-version) > VERSION"
           }
-          sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
+          dir ('./charts/dovecot-ldap-pg') {
+            container('python') {
+              sh "make tag"
+              }
+          }
+         container('python') {
 
-          sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
+            sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
 
+            sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
+         }
         }
       }
       stage('Promote to Environments') {
@@ -55,6 +64,7 @@ pipeline {
         }
         steps {
           dir ('./charts/dovecot-ldap-pg') {
+          container('python') {
               sh 'jx step changelog --version v\$(cat ../../VERSION)'
 
               // release the helm chart
@@ -62,7 +72,7 @@ pipeline {
 
               // promote through all 'Auto' promotion Environments
               sh 'jx promote -b --all-auto --timeout 1h --version \$(cat ../../VERSION)'
-
+            }
           }
         }
       }
