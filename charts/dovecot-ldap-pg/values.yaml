@@ -9,8 +9,8 @@ image:
 service:
   name: dovecot-ldap-pg
   type: ClusterIP
-  externalPort: 22
-  internalPort: 22
+  externalPort: 465
+  internalPort: 465
   annotations:
     fabric8.io/expose: "true"
     fabric8.io/ingress.annotations: "kubernetes.io/ingress.class: nginx"
