@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label "dovecot-with-PG-LDAP-support"
-    }
+    agent any
     environment {
       ORG               = 'armin-felder-gmail-com'
       APP_NAME          = 'dovecot-with-LDAP-PG-plugins'
@@ -34,13 +32,13 @@ pipeline {
           branch 'master'
         }
         steps {
-            // ensure we're not on a detached head
-            sh "git checkout master"
-            sh "git config --global credential.helper store"
+          // ensure we're not on a detached head
+          sh "git checkout master"
+          sh "git config --global credential.helper store"
 
-            sh "jx step git credentials"
-            // so we can retrieve the version in later steps
-            sh "echo \$(jx-release-version) > VERSION"
+          sh "jx step git credentials"
+          // so we can retrieve the version in later steps
+          sh "echo \$(jx-release-version) > VERSION"
 
           dir ('./charts/dovecot-ldap-pg') {
               sh "make tag"
