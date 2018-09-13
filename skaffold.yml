@@ -1,0 +1,31 @@
+apiVersion: skaffold/v1alpha2
+kind: Config
+build:
+  tagPolicy:
+    envTemplate:
+      template: "{{.DOCKER_REGISTRY}}/armin-felder-gmail-com/dovecot-ldap-pg:{{.VERSION}}"
+  artifacts:
+  - imageName: changeme
+    workspace: .
+    docker: {}
+  local: {}
+deploy:
+  kubectl:
+    manifests:
+profiles:
+- name: dev
+  build:
+    tagPolicy:
+      envTemplate:
+        template: "{{.DOCKER_REGISTRY}}/armin-felder-gmail-com/dovecot-ldap-pg:{{.DIGEST_HEX}}"
+    artifacts:
+    - docker: {}
+    local: {}
+  deploy:
+    helm:
+      releases:
+      - name: dovecot-ldap-pg
+        chartPath: charts/dovecot-ldap-pg
+        setValueTemplates:
+          image.repository: "{{.DOCKER_REGISTRY}}/armin-felder-gmail-com/dovecot-ldap-pg"
+          image.tag: "{{.TAG}}"
